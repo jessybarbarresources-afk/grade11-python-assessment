@@ -48,10 +48,10 @@ footer{text-align:center;color:#64748b;font-size:.85rem;margin:22px 0 0}
   <div id="examControls" class="panel no-print"><strong id="clock">40:00</strong> remaining <button class="action green" id="startExam" onclick="startExam()">Start 40-minute assessment</button><span id="examNotice" class="small"> Enter your name and class first.</span></div><div id="game">
     <div class="nav no-print" id="nav"></div>
     <section class="page active" data-page="0">
-      <div class="hero"><div class="eyebrow">Mission briefing • Page 1 of 8</div><h2>Welcome, Code Detective!</h2>
+      <div class="hero"><div class="eyebrow">Mission briefing • 10 missions</div><h2>Welcome, Code Detective!</h2>
       <p>Complete each mission to earn points. Answer all questions independently. Your responses are submitted when you finish or when 40 minutes expire.</p>
       <div class="tip"><strong>How to play:</strong> Each question is worth 1 point. Choose your answers and use the navigation buttons. You may review your selections before submitting. Answers and corrections will not be displayed during the exam.</div>
-      <p><span class="scorepill">10 missions</span> <span class="scorepill">40 minutes</span> <span class="scorepill">50 points total</span> <span class="scorepill">Print-ready report</span></p>
+      <p><span class="scorepill">10 missions</span> <span class="scorepill">40 minutes</span> <span class="scorepill">50 points total</span> <span class="scorepill">Submission receipt</span></p>
       <p class="small">Topics: identifiers, comments, indentation, input, output, pseudocode, operations, and comparisons.</p></div>
       <div class="panel"><h3>Detective rules</h3><ul><li>Use Python 3 rules when answering.</li><li>Choose one answer for every question on each page.</li><li>Use <strong>Next mission</strong> to continue.</li><li>Submit before the countdown reaches zero.</li></ul></div>
     </section>
@@ -117,7 +117,7 @@ footer{text-align:center;color:#64748b;font-size:.85rem;margin:22px 0 0}
       <div class="question" data-q="8-2"><div class="qtitle">2. Which identifier is invalid?</div><div class="choices"><label class="choice"><input type="radio" name="q8-2" value="a"> user_name</label><label class="choice"><input type="radio" name="q8-2" value="b"> user2</label><label class="choice"><input type="radio" name="q8-2" value="c"> _user</label><label class="choice"><input type="radio" name="q8-2" value="d"> user-name</label></div><div class="feedback"></div></div>
       <div class="question" data-q="8-3"><div class="qtitle">3. Which statement is correct about <code>input()</code>?</div><div class="choices"><label class="choice"><input type="radio" name="q8-3" value="a"> It always returns an integer</label><label class="choice"><input type="radio" name="q8-3" value="b"> It displays output only</label><label class="choice"><input type="radio" name="q8-3" value="c"> It returns text unless converted</label><label class="choice"><input type="radio" name="q8-3" value="d"> It is a comparison operator</label></div><div class="feedback"></div></div>
       <div class="question" data-q="8-4"><div class="qtitle">4. What is displayed?<div class="code">number = 12\nif number % 2 == 0:\n    print("Even")\nelse:\n    print("Odd")</div></div><div class="choices"><label class="choice"><input type="radio" name="q8-4" value="a"> Odd</label><label class="choice"><input type="radio" name="q8-4" value="b"> Even</label><label class="choice"><input type="radio" name="q8-4" value="c"> 0</label><label class="choice"><input type="radio" name="q8-4" value="d"> SyntaxError</label></div><div class="feedback"></div></div>
-      <div class="actions"><button class="action secondary" onclick="go(7)">← Previous</button><button class="action green" onclick="finish()">Submit assessment ★</button></div>
+      <div class="actions"><button class="action secondary" onclick="go(7)">← Previous</button><button class="action" onclick="go(9)">Code arranging →</button></div>
     </section>
     <section class="page" data-page="9">
       <div class="hero"><div class="eyebrow">Mission 9 • Drag and drop</div><h2>Put the Code in Order</h2><p>Drag each code line into the numbered slots to build a working Python program. On a touch screen, tap a line and then tap a slot.</p><div class="tip">Each challenge is worth 1 point. Arrange the lines in the correct order.</div></div>
@@ -135,12 +135,12 @@ footer{text-align:center;color:#64748b;font-size:.85rem;margin:22px 0 0}
     <h3>Submission</h3><p class="small">Your teacher will review the recorded grade. Answer keys are not shown during the assessment.</p><div id="review" style="display:none"></div>
     <div class="actions no-print"><button class="action secondary" id="retryButton" style="display:none" onclick="this.style.display='none';submitAnswersToSheet()">Retry submission</button><button class="action" onclick="window.print()">🖨 Print receipt</button><button class="action green" onclick="window.print()">Print / Save as PDF</button></div>
   </section>
-  <footer>Grade 11 Python Quest • Works offline in a modern browser • Submit your grade to Google Sheets • Internet required</footer>
+  <footer>Grade 11 Python Quest • Teacher-only grading via Google Apps Script • Internet required for submission</footer>
 </div>
 <script>
 const pageNames=["Start","Identifiers","Comments","Indentation","Input / Output","Pseudocode","Operations","Comparisons","Final Challenge","Code Sequence","Build Code"];
 let examStarted=false,submitted=false,startedAt=0,examInterval=null;
-const attemptId = (crypto.randomUUID ? crypto.randomUUID() : String(Date.now())+Math.random());
+const attemptId = (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function' ? crypto.randomUUID() : String(Date.now())+Math.random());
 function collectAnswers(){return [...document.querySelectorAll('.question')].map(q=>({id:q.dataset.q,value:q.querySelector('input:checked')?.value||''})).concat([...document.querySelectorAll('.coding-task')].map(t=>({id:t.dataset.title,value:[...t.querySelectorAll('.code-slot')].map(x=>x.dataset.lineId||'').join('|')})));}
 function startExam(){
  const name=document.getElementById('studentName').value.trim(), section=document.getElementById('classSection').value.trim();
@@ -161,7 +161,6 @@ function checkPage(page){return;}
 function allQuestions(){return [...document.querySelectorAll(".question")]}
 // Paste your deployed Apps Script Web App URL (ending in /exec) between the quotes below.
 const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxr1CLAALFX4l7PG1ZcZMrzmyMLOxDreELKmqNvlUHE_pnlxbX8c5ErpQ2K6iOByUpC/exec";
-let gradeSubmissionStarted = false;
 function submitAnswersToSheet(){
  const status=document.getElementById('submissionStatus');
  if(!GOOGLE_SCRIPT_URL || !GOOGLE_SCRIPT_URL.endsWith('/exec')){status.textContent='Connection not configured. Please inform your teacher.';return;}
